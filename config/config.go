@@ -21,7 +21,7 @@ func GetConnection() *sql.DB {
 		panic("Cannot read config because of: " + err.Error())
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		v.GetString("DB_USER"),
 		v.GetString("DB_PASS"),
 		v.GetString("DB_HOST"),

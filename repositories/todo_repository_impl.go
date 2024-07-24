@@ -38,5 +38,23 @@ func (repository *todoRepositoryImpl) Insert(ctx context.Context, todo entity.To
 }
 
 func (repository todoRepositoryImpl) GetAll(ctx context.Context) ([]entity.Todo, error) {
-	return nil, nil
+	db := repository.connDB
+	defer db.Close()
+
+	selectSQL := "SELECT id,title, description, created_at FROM todo"
+	rows, err := db.QueryContext(ctx, selectSQL)
+	if err != nil {
+		return nil, err
+	}
+
+	var todos []entity.Todo
+	for rows.Next() {
+		todo := entity.Todo{}
+		err := rows.Scan(&todo.Id, &todo.Title, &todo.Description, &todo.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		todos = append(todos, todo)
+	}
+	return todos, nil
 }
